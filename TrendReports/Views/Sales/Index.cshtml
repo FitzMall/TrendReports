@@ -1,0 +1,1039 @@
+﻿@model TrendReports.Models.SalesDataTotals
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var applicationPath = Request.ApplicationPath;
+
+    if (applicationPath == "/")
+    {
+        applicationPath = "";
+    }
+
+    var locations = new List<string>();
+    var allDates = new List<DateTime>();
+    var allCompareDates = new List<DateTime>();
+
+    for (var dt = Model.StartDate; dt <= Model.EndDate; dt = dt.AddDays(1))
+    {
+        allDates.Add(dt);
+    }
+
+    for (var dt = Model.CompareStartDate; dt <= Model.CompareEndDate; dt = dt.AddDays(1))
+    {
+        allCompareDates.Add(dt);
+    }
+
+    if (Model != null && Model.SalesData != null)
+    {
+        locations = Model.SalesData.OrderBy(x => x.Location).Select(x => x.Location).Distinct().ToList();
+
+    }
+
+    Random random = new Random();
+    int randomNumber = random.Next(0, 1000);
+
+    System.Globalization.NumberFormatInfo nfi = new System.Globalization.CultureInfo("en-US", false).NumberFormat;
+    nfi.CurrencyDecimalDigits = 2;
+    nfi.PercentDecimalDigits = 2;
+    nfi.CurrencySymbol = "$";
+
+    if (Model.DataPoint == "DealCount")
+    {
+        nfi.CurrencyDecimalDigits = 0;
+        nfi.PercentDecimalDigits = 2;
+        nfi.CurrencySymbol = "";
+    }
+
+}
+
+@section CSS{
+    <style type="text/css">
+        .table-bordered > tbody > tr > td.divider-column {
+            border-right: 3px double #dddddd;
+        }
+
+        .header-row {
+            background-color: #eee;
+            padding: 15px 0px;
+        }
+
+        .label-row {
+            padding: 7px 0px;
+        }
+
+        .chosen-container-multi .chosen-choices {
+            border-color: #ccc;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .chosen-container-multi .chosen-choices li.search-choice {
+            line-height: 17px;
+        }
+    </style>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Sales Analysis Report</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row header-row">
+            <div class="col-xs-12">
+                <div class="row label-row">
+                    <div class="col-xs-2">
+                        <label>Start Date:</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label>End Date:</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label>Compare Start Date:</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label>Compare End Date:</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label>Data Point:</label>
+                    </div>
+                    <div class="col-xs-2">
+                        <label>Location:</label>
+                    </div>
+                </div>
+                @using (Html.BeginForm())
+                {
+                    <div class="row input-row">
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(x => x.StartDate, new { type = "date", @class = "form-control datepicker", @value = Model.StartDate.ToShortDateString() })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(x => x.EndDate, new { type = "date", @class = "form-control datepicker", @value = Model.EndDate.ToShortDateString() })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(x => x.CompareStartDate, new { type = "date", @class = "form-control datepicker", @value = Model.CompareStartDate.ToShortDateString() })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.TextBoxFor(x => x.CompareEndDate, new { type = "date", @class = "form-control datepicker", @value = Model.CompareEndDate.ToShortDateString() })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(x => x.DataPoint, new SelectList(TrendReports.Business.Enums.SalesFieldNames, "Id", "Name"), new { @class = "form-control" })
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownListFor(x => x.SelectedLocations, new SelectList(TrendReports.Business.Enums.TrendLocations, "LocationId", "Name"), new { @class = "form-control chosen-select", multiple = "" })
+                        </div>
+                    </div>
+                    <div class="row input-row" style="margin-top:10px;">
+                        <div class="col-xs-2">
+                            <button class="btn btn-primary" type="submit" value="submit" name="Submit">Submit</button>
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.SalesData != null)
+{
+    <div class="row results-row">
+        <div class="col-xs-12 col-sm-6" style="padding:0 3px 0 0;">
+            <div id="leftpane-salesdata">
+                @if (Model.SalesData != null)
+                {
+                    <table class="table table-hover table-bordered" style="font-size:10px;">
+                        <thead>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Date</th>
+                                @foreach (var location in locations)
+                                {
+                                    var locationCode = "";
+                                    switch (location)
+                                    {
+                                        case "Annapolis":
+                                            locationCode = "FOC";
+                                            break;
+                                        case "Annapolis(Classic)":
+                                            locationCode = "FMM";
+                                            break;
+                                        case "Chambersburg":
+                                            locationCode = "FTN";
+                                            break;
+                                        case "Clearwater":
+                                            locationCode = "CJE";
+                                            break;
+                                        case "Frederick":
+                                            locationCode = "FAM";
+                                            break;
+                                        case "Lakeforest(Russell)":
+                                            locationCode = "LFO";
+                                            break;
+                                        case "Lakeforest(355)":
+                                            locationCode = "LFT";
+                                            break;
+                                        case "Germantown":
+                                            locationCode = "LFM";
+                                            break;
+                                        case "Hagerstown(CDJR)":
+                                            locationCode = "FHT";
+                                            break;
+                                        case "Hagerstown(GM)":
+                                            locationCode = "FHG";
+                                            break;
+                                        case "LexingtonPark(LexPark)":
+                                            locationCode = "FLP";
+                                            break;
+                                        case "Colonial":
+                                            locationCode = "CDO";
+                                            break;
+                                        case "Subaru":
+                                            locationCode = "FBS";
+                                            break;
+                                        case "Nicholson":
+                                            locationCode = "FBN";
+                                            break;
+                                        case "Wheaton":
+                                            locationCode = "WDC";
+                                            break;
+                                        case "Superstore":
+                                            locationCode = "FSS";
+                                            break;
+                                        default:
+                                            locationCode = location;
+                                            break;
+                                    }
+
+                                    <th class="text-center">@locationCode</th>
+                                }
+                                <th class="text-center" style="border-left: 3px double #dddddd;">Totals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var DealDate in allDates)
+                                {
+                                    decimal overallTotal = 0;
+                                    <tr>
+                                        <td>@DealDate.ToShortDateString()</td>
+                                        @foreach (var location in locations)
+                                        {
+                                            var locationRows = Model.SalesData.FindAll(x => x.Location == location && x.DealDate == DealDate);
+
+                                            decimal dateTotals = 0;
+                                            foreach (var row in locationRows)
+                                            {
+                                                switch (Model.DataPoint)
+                                                {
+                                                    case "DealCount":
+                                                        dateTotals += row.DealCount;
+                                                        break;
+                                                    case "FrontGrossAmount":
+                                                        dateTotals += row.GrossAmount;
+                                                        break;
+                                                    case "FinanceAmount":
+                                                        dateTotals += row.FinanceAmount;
+                                                        break;
+                                                    case "ServiceContractAmount":
+                                                        dateTotals += row.ServiceContractAmount;
+                                                        break;
+                                                    case "MaintenanceAmount":
+                                                        dateTotals += row.MaintenanceAmount;
+                                                        break;
+                                                    case "ZurichAmount":
+                                                        dateTotals += row.ZurichAmount;
+                                                        break;
+                                                    case "GapAmount":
+                                                        dateTotals += row.GapAmount;
+                                                        break;
+                                                    case "BPPAmount":
+                                                        dateTotals += row.BPPAmount;
+                                                        break;
+                                                }
+
+                                            }
+                                            overallTotal += dateTotals;
+
+                                            <td class="text-right">@dateTotals.ToString("C", nfi)</td>
+                                        }
+                                        <td class="text-right" style="border-left: 3px double #dddddd;">@overallTotal.ToString("C", nfi)</td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                        <tfoot>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Totals</th>
+                                @{
+                                    decimal grandTotal = 0;
+                                }
+                                @foreach (var location in locations)
+                                {
+                                    var locationRows = Model.SalesData.FindAll(x => x.Location == location);
+
+                                    decimal dateTotals = 0;
+                                    foreach (var row in locationRows)
+                                    {
+                                        switch (Model.DataPoint)
+                                        {
+                                            case "DealCount":
+                                                dateTotals += row.DealCount;
+                                                break;
+                                            case "FrontGrossAmount":
+                                                dateTotals += row.GrossAmount;
+                                                break;
+                                            case "FinanceAmount":
+                                                dateTotals += row.FinanceAmount;
+                                                break;
+                                            case "ServiceContractAmount":
+                                                dateTotals += row.ServiceContractAmount;
+                                                break;
+                                            case "MaintenanceAmount":
+                                                dateTotals += row.MaintenanceAmount;
+                                                break;
+                                            case "ZurichAmount":
+                                                dateTotals += row.ZurichAmount;
+                                                break;
+                                            case "GapAmount":
+                                                dateTotals += row.GapAmount;
+                                                break;
+                                            case "BPPAmount":
+                                                dateTotals += row.BPPAmount;
+                                                break;
+                                        }
+
+                                    }
+                                    grandTotal += dateTotals;
+
+                                    <th class="text-right">@dateTotals.ToString("C", nfi)</th>
+                                }
+                                <th class="text-right" style="border-left: 3px double #dddddd;">@grandTotal.ToString("C", nfi)</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Per Day</th>
+                                @{
+                                    decimal avgTotal = 0;
+                                    decimal perDay = 0;
+                                }
+                                @foreach (var location in locations)
+                                {
+                                    var locationRows = Model.SalesData.FindAll(x => x.Location == location);
+
+                                    decimal dateTotals = 0;
+                                    foreach (var row in locationRows)
+                                    {
+                                        switch (Model.DataPoint)
+                                        {
+                                            case "DealCount":
+                                                dateTotals += row.DealCount;
+                                                break;
+                                            case "FrontGrossAmount":
+                                                dateTotals += row.GrossAmount;
+                                                break;
+                                            case "FinanceAmount":
+                                                dateTotals += row.FinanceAmount;
+                                                break;
+                                            case "ServiceContractAmount":
+                                                dateTotals += row.ServiceContractAmount;
+                                                break;
+                                            case "MaintenanceAmount":
+                                                dateTotals += row.MaintenanceAmount;
+                                                break;
+                                            case "ZurichAmount":
+                                                dateTotals += row.ZurichAmount;
+                                                break;
+                                            case "GapAmount":
+                                                dateTotals += row.GapAmount;
+                                                break;
+                                            case "BPPAmount":
+                                                dateTotals += row.BPPAmount;
+                                                break;
+                                        }
+
+                                    }
+                                    avgTotal += dateTotals;
+
+                                    decimal avgDay = 0;
+
+                                    if (allDates.Count > 0)
+                                    {
+                                        avgDay = dateTotals / allDates.Count;
+                                    }
+                                    <th class="text-right">@avgDay.ToString("C", nfi)</th>
+                                }
+                                @{
+                                    if (allDates.Count > 0)
+                                    {
+                                        perDay = avgTotal / allDates.Count;
+                                    }
+                                }
+                                <th class="text-right" style="border-left: 3px double #dddddd;">@perDay.ToString("C", nfi)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                                    }
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-6" style="padding:0 0 0 3px;border-left:3px solid #808080">
+            <div id="rightpane-salesdata">
+                @if (Model.CompareSalesData != null)
+                {
+                    <table class="table table-hover table-bordered" style="font-size:10px;">
+                        <thead>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Date</th>
+                                @foreach (var location in locations)
+                                {
+                                    var locationCode = "";
+                                    switch (location)
+                                    {
+                                        case "Annapolis":
+                                            locationCode = "FOC";
+                                            break;
+                                        case "Annapolis(Classic)":
+                                            locationCode = "FMM";
+                                            break;
+                                        case "Chambersburg":
+                                            locationCode = "FTN";
+                                            break;
+                                        case "Clearwater":
+                                            locationCode = "CJE";
+                                            break;
+                                        case "Frederick":
+                                            locationCode = "FAM";
+                                            break;
+                                        case "Lakeforest(Russell)":
+                                            locationCode = "LFO";
+                                            break;
+                                        case "Lakeforest(355)":
+                                            locationCode = "LFT";
+                                            break;
+                                        case "Germantown":
+                                            locationCode = "LFM";
+                                            break;
+                                        case "Hagerstown(CDJR)":
+                                            locationCode = "FHT";
+                                            break;
+                                        case "Hagerstown(GM)":
+                                            locationCode = "FHG";
+                                            break;
+                                        case "LexingtonPark(LexPark)":
+                                            locationCode = "FLP";
+                                            break;
+                                        case "Colonial":
+                                            locationCode = "CDO";
+                                            break;
+                                        case "Subaru":
+                                            locationCode = "FBS";
+                                            break;
+                                        case "Nicholson":
+                                            locationCode = "FBN";
+                                            break;
+                                        case "Wheaton":
+                                            locationCode = "WDC";
+                                            break;
+                                        case "Superstore":
+                                            locationCode = "FSS";
+                                            break;
+                                        default:
+                                            locationCode = location;
+                                            break;
+                                    }
+
+                                    <th class="text-center">@locationCode</th>
+                                }
+                                <th class="text-center" style="border-left: 3px double #dddddd;">Totals</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var DealDate in allCompareDates)
+                                {
+                                    decimal overallTotal = 0;
+                                    <tr>
+                                        <td>@DealDate.ToShortDateString()</td>
+                                        @foreach (var location in locations)
+                                        {
+                                            var locationRows = Model.CompareSalesData.FindAll(x => x.Location == location && x.DealDate == DealDate);
+
+                                            decimal dateTotals = 0;
+                                            foreach (var row in locationRows)
+                                            {
+                                                switch (Model.DataPoint)
+                                                {
+                                                    case "DealCount":
+                                                        dateTotals += row.DealCount;
+                                                        break;
+                                                    case "FrontGrossAmount":
+                                                        dateTotals += row.GrossAmount;
+                                                        break;
+                                                    case "FinanceAmount":
+                                                        dateTotals += row.FinanceAmount;
+                                                        break;
+                                                    case "ServiceContractAmount":
+                                                        dateTotals += row.ServiceContractAmount;
+                                                        break;
+                                                    case "MaintenanceAmount":
+                                                        dateTotals += row.MaintenanceAmount;
+                                                        break;
+                                                    case "ZurichAmount":
+                                                        dateTotals += row.ZurichAmount;
+                                                        break;
+                                                    case "GapAmount":
+                                                        dateTotals += row.GapAmount;
+                                                        break;
+                                                    case "BPPAmount":
+                                                        dateTotals += row.BPPAmount;
+                                                        break;
+                                                }
+
+                                            }
+                                            overallTotal += dateTotals;
+
+                                            <td class="text-right">@dateTotals.ToString("C", nfi)</td>
+                                        }
+                                        <td class="text-right" style="border-left: 3px double #dddddd;">@overallTotal.ToString("C", nfi)</td>
+                                    </tr>
+                                }
+                            }
+
+
+                        </tbody>
+                        <tfoot>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Totals</th>
+                                @{
+                                    decimal grandTotal = 0;
+                                }
+                                @foreach (var location in locations)
+                                {
+                                    var locationRows = Model.CompareSalesData.FindAll(x => x.Location == location);
+
+                                    decimal dateTotals = 0;
+                                    foreach (var row in locationRows)
+                                    {
+                                        switch (Model.DataPoint)
+                                        {
+                                            case "DealCount":
+                                                dateTotals += row.DealCount;
+                                                break;
+                                            case "FrontGrossAmount":
+                                                dateTotals += row.GrossAmount;
+                                                break;
+                                            case "FinanceAmount":
+                                                dateTotals += row.FinanceAmount;
+                                                break;
+                                            case "ServiceContractAmount":
+                                                dateTotals += row.ServiceContractAmount;
+                                                break;
+                                            case "MaintenanceAmount":
+                                                dateTotals += row.MaintenanceAmount;
+                                                break;
+                                            case "ZurichAmount":
+                                                dateTotals += row.ZurichAmount;
+                                                break;
+                                            case "GapAmount":
+                                                dateTotals += row.GapAmount;
+                                                break;
+                                            case "BPPAmount":
+                                                dateTotals += row.BPPAmount;
+                                                break;
+                                        }
+
+                                    }
+                                    grandTotal += dateTotals;
+
+                                    <th class="text-right">@dateTotals.ToString("C", nfi)</th>
+                                }
+                                <th class="text-right" style="border-left: 3px double #dddddd;">@grandTotal.ToString("C", nfi)</th>
+                            </tr>
+                            <tr style="background-color:#d9edf7">
+                                <th class="text-center">Per Day</th>
+                                @{
+                                    decimal avgTotal = 0;
+                                    decimal perDay = 0;
+                                }
+                                @foreach (var location in locations)
+                                {
+                                    var locationRows = Model.CompareSalesData.FindAll(x => x.Location == location);
+
+                                    decimal dateTotals = 0;
+                                    foreach (var row in locationRows)
+                                    {
+                                        switch (Model.DataPoint)
+                                        {
+                                            case "DealCount":
+                                                dateTotals += row.DealCount;
+                                                break;
+                                            case "FrontGrossAmount":
+                                                dateTotals += row.GrossAmount;
+                                                break;
+                                            case "FinanceAmount":
+                                                dateTotals += row.FinanceAmount;
+                                                break;
+                                            case "ServiceContractAmount":
+                                                dateTotals += row.ServiceContractAmount;
+                                                break;
+                                            case "MaintenanceAmount":
+                                                dateTotals += row.MaintenanceAmount;
+                                                break;
+                                            case "ZurichAmount":
+                                                dateTotals += row.ZurichAmount;
+                                                break;
+                                            case "GapAmount":
+                                                dateTotals += row.GapAmount;
+                                                break;
+                                            case "BPPAmount":
+                                                dateTotals += row.BPPAmount;
+                                                break;
+                                        }
+
+                                    }
+                                    avgTotal += dateTotals;
+
+                                    decimal avgDay = 0;
+
+                                    if (allDates.Count > 0)
+                                    {
+                                        avgDay = dateTotals / allDates.Count;
+                                    }
+                                    <th class="text-right">@avgDay.ToString("C", nfi)</th>
+                                }
+                                @{
+                                    if (allDates.Count > 0)
+                                    {
+                                        perDay = avgTotal / allDates.Count;
+                                    }
+                                }
+                                <th class="text-right" style="border-left: 3px double #dddddd;">@perDay.ToString("C", nfi)</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                                    }
+            </div>
+        </div>
+    </div>
+                                    if (Model.CompareSalesData != null)
+                                    {
+<div class="row results-row">
+    <div class="col-xs-12">
+        <h4>Data Totals Comparison</h4>
+        @{
+            var upperLocationTotals = new Dictionary<string, decimal>();
+            var lowerLocationTotals = new Dictionary<string, decimal>();
+        }
+
+        <table class="table table-bordered">
+            <thead>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">Date</th>
+                    @foreach (var location in locations)
+                    {
+                        var locationCode = "";
+                        switch (location)
+                        {
+                            case "Annapolis":
+                                locationCode = "FMM";
+                                break;
+                            case "Annapolis(Classic)":
+                                locationCode = "FOC";
+                                break;
+                            case "Chambersburg":
+                                locationCode = "FTN";
+                                break;
+                            case "Clearwater":
+                                locationCode = "CJE";
+                                break;
+                            case "Frederick":
+                                locationCode = "FAM";
+                                break;
+                            case "Lakeforest(Russell)":
+                                locationCode = "LFO";
+                                break;
+                            case "Lakeforest(355)":
+                                locationCode = "LFT";
+                                break;
+                            case "Germantown":
+                                locationCode = "LFM";
+                                break;
+                            case "Hagerstown(CDJR)":
+                                locationCode = "FHT";
+                                break;
+                            case "Hagerstown(GM)":
+                                locationCode = "FHG";
+                                break;
+                            case "LexingtonPark(LexPark)":
+                                locationCode = "FLP";
+                                break;
+                            case "Colonial":
+                                locationCode = "CDO";
+                                break;
+                            case "Subaru":
+                                locationCode = "FBS";
+                                break;
+                            case "Nicholson":
+                                locationCode = "FBN";
+                                break;
+                            case "Wheaton":
+                                locationCode = "WDC";
+                                break;
+                            case "Superstore":
+                                locationCode = "FSS";
+                                break;
+                            default:
+                                locationCode = location;
+                                break;
+                        }
+
+                        <th class="text-center">@locationCode</th>
+                    }
+                    <th class="text-center" style="border-left: 3px double #dddddd;">Totals</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">@Model.StartDate.ToShortDateString() - @Model.EndDate.ToShortDateString()</td>
+                    @{
+                        decimal grandUpperTotal = 0;
+                    }
+                    @foreach (var location in locations)
+                    {
+                        var locationRows = Model.SalesData.FindAll(x => x.Location == location);
+
+                        decimal dateTotals = 0;
+                        foreach (var row in locationRows)
+                        {
+                            switch (Model.DataPoint)
+                            {
+                                case "DealCount":
+                                    dateTotals += row.DealCount;
+                                    break;
+                                case "FrontGrossAmount":
+                                    dateTotals += row.GrossAmount;
+                                    break;
+                                case "FinanceAmount":
+                                    dateTotals += row.FinanceAmount;
+                                    break;
+                                case "ServiceContractAmount":
+                                    dateTotals += row.ServiceContractAmount;
+                                    break;
+                                case "MaintenanceAmount":
+                                    dateTotals += row.MaintenanceAmount;
+                                    break;
+                                case "ZurichAmount":
+                                    dateTotals += row.ZurichAmount;
+                                    break;
+                                case "GapAmount":
+                                    dateTotals += row.GapAmount;
+                                    break;
+                                case "BPPAmount":
+                                    dateTotals += row.BPPAmount;
+                                    break;
+                            }
+
+                        }
+                        grandUpperTotal += dateTotals;
+                        upperLocationTotals.Add(location, dateTotals);
+
+                        <td class="text-right">@dateTotals.ToString("C", nfi)</td>
+                    }
+                    <td class="text-right" style="border-left: 3px double #dddddd;">@grandUpperTotal.ToString("C", nfi)</td>
+                </tr>
+                <tr>
+                    <td class="text-center">@Model.CompareStartDate.ToShortDateString() - @Model.CompareEndDate.ToShortDateString()</td>
+                    @{
+                        decimal grandLowerTotal = 0;
+                    }
+                    @foreach (var location in locations)
+                    {
+                        var locationRows = Model.CompareSalesData.FindAll(x => x.Location == location);
+
+                        decimal dateTotals = 0;
+                        foreach (var row in locationRows)
+                        {
+                            switch (Model.DataPoint)
+                            {
+                                case "DealCount":
+                                    dateTotals += row.DealCount;
+                                    break;
+                                case "FrontGrossAmount":
+                                    dateTotals += row.GrossAmount;
+                                    break;
+                                case "FinanceAmount":
+                                    dateTotals += row.FinanceAmount;
+                                    break;
+                                case "ServiceContractAmount":
+                                    dateTotals += row.ServiceContractAmount;
+                                    break;
+                                case "MaintenanceAmount":
+                                    dateTotals += row.MaintenanceAmount;
+                                    break;
+                                case "ZurichAmount":
+                                    dateTotals += row.ZurichAmount;
+                                    break;
+                                case "GapAmount":
+                                    dateTotals += row.GapAmount;
+                                    break;
+                                case "BPPAmount":
+                                    dateTotals += row.BPPAmount;
+                                    break;
+                            }
+
+                        }
+                        grandLowerTotal += dateTotals;
+                        lowerLocationTotals.Add(location, dateTotals);
+
+                        <td class="text-right">@dateTotals.ToString("C", nfi)</td>
+                    }
+                    <td class="text-right" style="border-left: 3px double #dddddd;">@grandLowerTotal.ToString("C", nfi)</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">Difference</th>
+                    @foreach (var location in locations)
+                    {
+                        var difference = lowerLocationTotals[location] - upperLocationTotals[location];
+
+
+                        <th class="text-right">@difference.ToString("C", nfi)</th>
+                    }
+                    @{
+                        var grandTotaldifference = grandLowerTotal - grandUpperTotal;
+                    }
+                    <th class="text-right">@grandTotaldifference.ToString("C", nfi)</th>
+                </tr>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">% Change</th>
+                    @foreach (var location in locations)
+                    {
+                        var difference = lowerLocationTotals[location] - upperLocationTotals[location];
+                        decimal percentChange = 0;
+
+                        if (upperLocationTotals[location] > 0)
+                        {
+                            percentChange = difference / upperLocationTotals[location];
+                        }
+                        <th class="text-right">@percentChange.ToString("P", nfi)</th>
+                    }
+                    @{
+                        var totalpercentChange = grandTotaldifference / grandUpperTotal;
+                    }
+
+                    <th class="text-right">@totalpercentChange.ToString("P", nfi)</th>
+                </tr>
+
+            </tfoot>
+
+        </table>
+</div>
+</div>
+                        }
+<div class="row results-row">
+    <div class="col-xs-12">
+        <h4>Data Chart</h4>
+        <div id="chartContainer-@randomNumber" style="height: 370px; width: 100%;"></div>
+
+        <script>
+
+            var chart = new CanvasJS.Chart("chartContainer-@randomNumber", {
+	title: {
+		text: "@Model.DataPoint Sales"
+	},
+	axisX: {
+		valueFormatString: "MMM DD"
+	},
+	axisY2: {
+	    title: "Sales Revenue",
+	    includeZero: false,
+        		@if (Model.DataPoint == "DealCount")
+                {
+        		        @:prefix: "",
+        		        }
+                else
+                {
+        		    @:prefix: "$",
+        		    }
+
+		suffix: ""
+	},
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor: "pointer",
+		verticalAlign: "top",
+		horizontalAlign: "center",
+		dockInsidePlotArea: true,
+		itemclick: toogleDataSeries
+	},
+	data: [{
+		type:"line",
+		axisYType: "secondary",
+		name: "@Model.EndDate.Year @Model.DataPoint",
+		showInLegend: true,
+	    //markerSize: 1,
+		@if (Model.DataPoint == "DealCount")
+        {
+		        @:yValueFormatString: "###",
+		    }
+        else
+        {
+		    @:yValueFormatString: "$#,###",
+	    		}
+        xValueFormatString: "MMM DD",
+		dataPoints: [
+             @{
+                 foreach (var DealDate in allDates)
+                 {
+                     decimal overallTotal = 0;
+
+                     foreach (var location in locations)
+                     {
+                         var locationRows = Model.SalesData.FindAll(x => x.Location == location && x.DealDate == DealDate);
+
+                         decimal dateTotals = 0;
+                         foreach (var row in locationRows)
+                         {
+                             switch (Model.DataPoint)
+                             {
+                                 case "DealCount":
+                                     dateTotals += row.DealCount;
+                                     break;
+                                 case "FrontGrossAmount":
+                                     dateTotals += row.GrossAmount;
+                                     break;
+                                 case "FinanceAmount":
+                                     dateTotals += row.FinanceAmount;
+                                     break;
+                                 case "ServiceContractAmount":
+                                     dateTotals += row.ServiceContractAmount;
+                                     break;
+                                 case "MaintenanceAmount":
+                                     dateTotals += row.MaintenanceAmount;
+                                     break;
+                                 case "ZurichAmount":
+                                     dateTotals += row.ZurichAmount;
+                                     break;
+                                 case "GapAmount":
+                                     dateTotals += row.GapAmount;
+                                     break;
+                                 case "BPPAmount":
+                                     dateTotals += row.BPPAmount;
+                                     break;
+                             }
+
+                         }
+                         overallTotal += dateTotals;
+
+
+                     }
+                     var javascriptMonth = DealDate.Month - 1;
+                     @:{ x: new Date(@DateTime.Now.Year, @javascriptMonth.ToString("00"), @DealDate.Day.ToString("00")), y: @overallTotal },
+                                 }
+                             }
+
+
+		]
+	},
+{
+    type:"line",
+    axisYType: "secondary",
+    name: "@Model.CompareEndDate.Year @Model.DataPoint",
+    showInLegend: true,
+    //markerSize: 1,
+		@if (Model.DataPoint == "DealCount")
+        {
+		        @:yValueFormatString: "###",
+		        }
+        else
+        {
+		    @:yValueFormatString: "$#,###",
+		    }
+    xValueFormatString: "MMM DD",
+	    dataPoints: [
+             @{
+                 if (Model.CompareSalesData != null)
+                 {
+                     foreach (var DealDate in allCompareDates)
+                     {
+                         decimal overallTotal = 0;
+
+                         foreach (var location in locations)
+                         {
+                             var locationRows = Model.CompareSalesData.FindAll(x => x.Location == location && x.DealDate == DealDate);
+
+                             decimal dateTotals = 0;
+                             foreach (var row in locationRows)
+                             {
+                                 switch (Model.DataPoint)
+                                 {
+                                     case "DealCount":
+                                         dateTotals += row.DealCount;
+                                         break;
+                                     case "FrontGrossAmount":
+                                         dateTotals += row.GrossAmount;
+                                         break;
+                                     case "FinanceAmount":
+                                         dateTotals += row.FinanceAmount;
+                                         break;
+                                     case "ServiceContractAmount":
+                                         dateTotals += row.ServiceContractAmount;
+                                         break;
+                                     case "MaintenanceAmount":
+                                         dateTotals += row.MaintenanceAmount;
+                                         break;
+                                     case "ZurichAmount":
+                                         dateTotals += row.ZurichAmount;
+                                         break;
+                                     case "GapAmount":
+                                         dateTotals += row.GapAmount;
+                                         break;
+                                     case "BPPAmount":
+                                         dateTotals += row.BPPAmount;
+                                         break;
+                                 }
+
+                             }
+                             overallTotal += dateTotals;
+
+
+                         }
+                         var javascriptMonth = DealDate.Month - 1;
+    @:{ x: new Date(@DateTime.Now.Year, @javascriptMonth.ToString("00"), @DealDate.Day.ToString("00")), y: @overallTotal },
+                                 }
+                     }
+                 }
+
+]
+}	
+	
+	]
+});
+chart.render();
+
+function toogleDataSeries(e){
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	} else{
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+
+
+        </script>
+    </div>
+</div>
+                 }
+
+@section Scripts
+{
+
+}

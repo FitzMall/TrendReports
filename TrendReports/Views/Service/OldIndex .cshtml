@@ -1,0 +1,300 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var applicationPath = Request.ApplicationPath;
+
+    if (applicationPath == "/")
+    {
+        applicationPath = "";
+    }
+
+}
+
+@section CSS{
+    <style type="text/css">
+        .table-bordered > tbody > tr > td.divider-column {
+            border-right: 3px double #dddddd;
+        }
+
+        .header-row{
+            background-color:#eee;
+            padding:15px 0px;
+        }
+
+        .label-row {
+            padding: 7px 0px;
+        }
+        .chosen-container-multi .chosen-choices {
+            border-color: #ccc;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .chosen-container-multi .chosen-choices li.search-choice {
+            line-height:17px;
+        }
+    </style>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Service Analysis Report</h2>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="row header-row">
+            <div class="col-xs-12 col-sm-6">
+                <div class="row label-row">
+                    <div class="col-xs-3">
+                        <label>Start Date:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>End Date:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>Data Point:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>Location:</label>
+                    </div>
+                </div>
+                <div class="row input-row">
+                    <div class="col-xs-3">
+                        <input type="date" id="left-start-date" name="left-start-date" class="form-control" />
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="date" id="left-end-date" name="left-end-date" class="form-control" />
+                    </div>
+                    <div class="col-xs-3">
+                        <select id="left-field-name" name="left-field-name" class="form-control">
+                            <option value=""></option>
+                            <option value="RepairOrderCount">Repair Order Count</option>
+                            <option value="CustomerAmount">Customer Amount</option>
+                            <option value="WarrantyAmount">Warranty Amount</option>
+                            <option value="CustomerLaborAmount">Customer Labor Amount</option>
+                            <option value="WarrantyLaborAmount">Warranty Labor Amount</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <select id="left-location" name="left-location" class="form-control chosen-select" multiple>                            
+                            <option value=""></option>
+                            <option value="ALL">All Locations</option>
+                            <option value="FOC">Annapolis</option>
+                            <option value="FTN">Chambersburg</option>
+                            <option value="CHY">Clearwater Hyundai/Subaru</option>
+                            <option value="CJE">Clearwater Chrysler/Jeep</option>
+                            <option value="FAM">Frederick</option>
+                            <option value="LFO">Gaithersburg Hyundai/Subaru</option>
+                            <option value="LFT">Gaithersburg Toyota</option>                            
+                            <option value="FHG">Hagerstown Chrysler</option>
+                            <option value="FHT">Hagerstown GM</option>
+                            <option value="FLP">Lexington Park</option>
+                            <option value="CDO">Rockville Hyundai</option>
+                            <option value="FBS">Rockvile Nicholson</option>
+                            <option value="WDC">Wheaton</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6" style="border-left:3px solid #808080">
+                <div class="row label-row">
+                    <div class="col-xs-3">
+                        <label>Start Date:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>End Date:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>Data Point:</label>
+                    </div>
+                    <div class="col-xs-3">
+                        <label>Location:</label>
+                    </div>
+                </div>
+                <div class="row input-row">
+                    <div class="col-xs-3">
+                        <input type="date" id="right-start-date" name="right-start-date" class="form-control" />
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="date" id="right-end-date" name="right-end-date" class="form-control" />
+                    </div>
+                    <div class="col-xs-3">
+                        <select id="right-field-name" name="right-field-name" class="form-control">
+                            <option value=""></option>
+                            <option value="RepairOrderCount">Repair Order Count</option>
+                            <option value="CustomerAmount">Customer Amount</option>
+                            <option value="WarrantyAmount">Warranty Amount</option>
+                            <option value="CustomerLaborAmount">Customer Labor Amount</option>
+                            <option value="WarrantyLaborAmount">Warranty Labor Amount</option>
+                        </select>
+                    </div>
+                    <div class="col-xs-3">
+                        <select id="right-location" name="right-location" class="form-control chosen-select" multiple>
+                            <option value=""></option>
+                            <option value="ALL">All Locations</option>
+                            <option value="FOC">Annapolis</option>
+                            <option value="FTN">Chambersburg</option>
+                            <option value="CHY">Clearwater Hyundai/Subaru</option>
+                            <option value="CJE">Clearwater Chrysler/Jeep</option>
+                            <option value="FAM">Frederick</option>
+                            <option value="LFO">Gaithersburg Hyundai/Subaru</option>
+                            <option value="LFT">Gaithersburg Toyota</option>
+                            <option value="FHG">Hagerstown Chrysler</option>
+                            <option value="FHT">Hagerstown GM</option>
+                            <option value="FLP">Lexington Park</option>
+                            <option value="CDO">Rockville Hyundai</option>
+                            <option value="FBS">Rockvile Nicholson</option>
+                            <option value="WDC">Wheaton</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+    <div class="col-xs-12">
+        <div class="row results-row">
+            <div class="col-xs-12 col-sm-6" style="padding:0 3px 0 0;">
+                <div id="leftpane-servicedata">
+                    
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6" style="padding:0 0 0 3px;border-left:3px solid #808080">
+                <div id="rightpane-servicedata">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script type="text/javascript">
+        $(function(){
+
+            $("#left-start-date").on('change', function () {
+                var startdate = $(this).val();
+                var location = $("#left-location").val();
+                var fieldname = $("#left-field-name").val();
+                var enddate = $("#left-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadLeftAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            $("#left-end-date").on('change', function () {                
+                var enddate = $(this).val();
+                var fieldname = $("#left-field-name").val();
+                var location = $("#left-location").val();
+                var startdate = $("#left-start-date").val();
+                
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadLeftAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            $("#left-field-name").on('change', function () {
+                var fieldname = $(this).val();
+                var location = $("#left-location").val();
+                var startdate = $("#left-start-date").val();
+                var enddate = $("#left-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadLeftAJAXPanel(startdate, enddate, fieldname, location);
+                }
+
+
+            });
+
+            $("#left-location").on('change', function () {
+                var location = $(this).val();
+                var fieldname = $("#left-field-name").val();
+                var startdate = $("#left-start-date").val();
+                var enddate = $("#left-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadLeftAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            function LoadLeftAJAXPanel(startdate, enddate, fieldname, location)
+            {
+                var parameters = startdate + '/' + enddate + '/' + fieldname + '/' + location;
+
+                $.ajax({
+                    url: '@applicationPath/Service/ServiceData/' + parameters,
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#leftpane-servicedata').html(data);
+                    }
+                });
+            }
+
+            //NOW ALL THE RIGHT SIDE STUFF
+
+            $("#right-start-date").on('change', function () {
+                var startdate = $(this).val();
+                var location = $("#right-location").val();
+                var fieldname = $("#right-field-name").val();
+                var enddate = $("#right-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadrightAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            $("#right-end-date").on('change', function () {
+                var enddate = $(this).val();
+                var fieldname = $("#right-field-name").val();
+                var location = $("#right-location").val();
+                var startdate = $("#right-start-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadrightAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            $("#right-field-name").on('change', function () {
+                var fieldname = $(this).val();
+                var location = $("#right-location").val();
+                var startdate = $("#right-start-date").val();
+                var enddate = $("#right-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadrightAJAXPanel(startdate, enddate, fieldname, location);
+                }
+
+
+            });
+
+            $("#right-location").on('change', function () {
+                var location = $(this).val();
+                var fieldname = $("#right-field-name").val();
+                var startdate = $("#right-start-date").val();
+                var enddate = $("#right-end-date").val();
+
+                if (location != '' && fieldname != '' && startdate != '' && enddate != '') {
+                    LoadrightAJAXPanel(startdate, enddate, fieldname, location);
+                }
+            });
+
+            function LoadrightAJAXPanel(startdate, enddate, fieldname, location) {
+                var parameters = startdate + '/' + enddate + '/' + fieldname + '/' + location;
+
+                $.ajax({
+                    url: '@applicationPath/Service/ServiceData/' + parameters,
+                    dataType: 'html',
+                    success: function (data) {
+                        $('#rightpane-servicedata').html(data);
+                    }
+                });
+            }
+
+        });
+    </script>
+}

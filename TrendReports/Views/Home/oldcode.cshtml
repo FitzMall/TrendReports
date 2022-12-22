@@ -1,0 +1,268 @@
+﻿@*
+
+                                    decimal yearDifferenceGrossAmount = Model.SalesSummary.CurrentYearToDate.GrossAmount - Model.SalesSummary.PreviousYearToDate.GrossAmount;
+                                decimal monthDifferenceGrossAmount = Model.SalesSummary.CurrentMonthToDate.GrossAmount - Model.SalesSummary.PreviousMonthToDate.GrossAmount;
+                                //decimal weekDifferenceGrossAmount = Model.SalesSummary.CurrentWeekToDate.GrossAmount - Model.SalesSummary.PreviousWeekToDate.GrossAmount;
+
+                                decimal dayDifferenceGrossAmount = Model.SalesSummary.CurrentDate.GrossAmount - Model.SalesSummary.PreviousDate.GrossAmount;
+
+                                decimal yearPercentageGrossAmount = yearDifferenceGrossAmount / Model.SalesSummary.PreviousYearToDate.GrossAmount;
+                                decimal monthPercentageGrossAmount = monthDifferenceGrossAmount / Model.SalesSummary.PreviousMonthToDate.GrossAmount;
+                                //decimal weekPercentageGrossAmount = weekDifferenceGrossAmount / Model.SalesSummary.PreviousWeekToDate.GrossAmount;
+                                decimal dayPercentageGrossAmount = 0;
+
+                                if (Model.SalesSummary.PreviousDate.GrossAmount > 0)
+                                {
+                                    dayPercentageGrossAmount = dayDifferenceGrossAmount / Model.SalesSummary.PreviousDate.GrossAmount;
+                                }
+                                decimal yearDifferenceFinanceAmount = Model.SalesSummary.CurrentYearToDate.FinanceAmount - Model.SalesSummary.PreviousYearToDate.FinanceAmount;
+                                decimal monthDifferenceFinanceAmount = Model.SalesSummary.CurrentMonthToDate.FinanceAmount - Model.SalesSummary.PreviousMonthToDate.FinanceAmount;
+                                // decimal weekDifferenceFinanceAmount = Model.SalesSummary.CurrentWeekToDate.FinanceAmount - Model.SalesSummary.PreviousWeekToDate.FinanceAmount;
+                                decimal dayDifferenceFinanceAmount = Model.SalesSummary.CurrentDate.FinanceAmount - Model.SalesSummary.PreviousDate.FinanceAmount;
+
+                                decimal yearPercentageFinanceAmount = yearDifferenceFinanceAmount / Model.SalesSummary.PreviousYearToDate.FinanceAmount;
+                                decimal monthPercentageFinanceAmount = monthDifferenceFinanceAmount / Model.SalesSummary.PreviousMonthToDate.FinanceAmount;
+                                // decimal weekPercentageFinanceAmount = weekDifferenceFinanceAmount / Model.SalesSummary.PreviousWeekToDate.FinanceAmount;
+                                decimal dayPercentageFinanceAmount = 0;
+                                if (Model.SalesSummary.PreviousDate.FinanceAmount > 0)
+                                {
+                                    dayPercentageFinanceAmount = dayDifferenceFinanceAmount / Model.SalesSummary.PreviousDate.FinanceAmount;
+                                }
+
+                                decimal yearDifferenceServiceContractAmount = Model.SalesSummary.CurrentYearToDate.ServiceContractAmount - Model.SalesSummary.PreviousYearToDate.ServiceContractAmount;
+                                decimal monthDifferenceServiceContractAmount = Model.SalesSummary.CurrentMonthToDate.ServiceContractAmount - Model.SalesSummary.PreviousMonthToDate.ServiceContractAmount;
+                                // decimal weekDifferenceServiceContractAmount = Model.SalesSummary.CurrentWeekToDate.ServiceContractAmount - Model.SalesSummary.PreviousWeekToDate.ServiceContractAmount;
+                                decimal dayDifferenceServiceContractAmount = Model.SalesSummary.CurrentDate.ServiceContractAmount - Model.SalesSummary.PreviousDate.ServiceContractAmount;
+
+                                decimal yearPercentageServiceContractAmount = yearDifferenceServiceContractAmount / Model.SalesSummary.PreviousYearToDate.ServiceContractAmount;
+                                decimal monthPercentageServiceContractAmount = monthDifferenceServiceContractAmount / Model.SalesSummary.PreviousMonthToDate.ServiceContractAmount;
+                                //decimal weekPercentageServiceContractAmount = weekDifferenceServiceContractAmount / Model.SalesSummary.PreviousWeekToDate.ServiceContractAmount;
+                                decimal dayPercentageServiceContractAmount = 0;
+                                if (Model.SalesSummary.PreviousDate.ServiceContractAmount > 0)
+                                {
+                                    dayPercentageServiceContractAmount = dayDifferenceServiceContractAmount / Model.SalesSummary.PreviousDate.ServiceContractAmount;
+                                }
+
+                                decimal yearDifferenceMaintenanceAmount = Model.SalesSummary.CurrentYearToDate.MaintenanceAmount - Model.SalesSummary.PreviousYearToDate.MaintenanceAmount;
+                                decimal monthDifferenceMaintenanceAmount = Model.SalesSummary.CurrentMonthToDate.MaintenanceAmount - Model.SalesSummary.PreviousMonthToDate.MaintenanceAmount;
+                                //decimal weekDifferenceMaintenanceAmount = Model.SalesSummary.CurrentWeekToDate.MaintenanceAmount - Model.SalesSummary.PreviousWeekToDate.MaintenanceAmount;
+                                decimal dayDifferenceMaintenanceAmount = Model.SalesSummary.CurrentDate.MaintenanceAmount - Model.SalesSummary.PreviousDate.MaintenanceAmount;
+
+                                decimal yearPercentageMaintenanceAmount = yearDifferenceMaintenanceAmount / Model.SalesSummary.PreviousYearToDate.MaintenanceAmount;
+                                decimal monthPercentageMaintenanceAmount = 0;
+                                if (Model.SalesSummary.PreviousMonthToDate.MaintenanceAmount > 0)
+                                {
+                                    monthPercentageMaintenanceAmount = monthDifferenceMaintenanceAmount / Model.SalesSummary.PreviousMonthToDate.MaintenanceAmount;
+                                }
+                                //decimal weekPercentageMaintenanceAmount = 0;
+
+                                //if (Model.SalesSummary.PreviousWeekToDate.MaintenanceAmount > 0)
+                                //{
+                                //    weekPercentageMaintenanceAmount = weekDifferenceMaintenanceAmount / Model.SalesSummary.PreviousWeekToDate.MaintenanceAmount;
+                                //}
+
+                                decimal dayPercentageMaintenanceAmount = 0;
+                                if (Model.SalesSummary.PreviousDate.MaintenanceAmount > 0)
+                                {
+                                    dayPercentageMaintenanceAmount = dayDifferenceMaintenanceAmount / Model.SalesSummary.PreviousDate.MaintenanceAmount;
+                                }
+
+                                decimal yearDifferenceZurichAmount = Model.SalesSummary.CurrentYearToDate.ZurichAmount - Model.SalesSummary.PreviousYearToDate.ZurichAmount;
+                                decimal monthDifferenceZurichAmount = Model.SalesSummary.CurrentMonthToDate.ZurichAmount - Model.SalesSummary.PreviousMonthToDate.ZurichAmount;
+                                //decimal weekDifferenceZurichAmount = Model.SalesSummary.CurrentWeekToDate.ZurichAmount - Model.SalesSummary.PreviousWeekToDate.ZurichAmount;
+                                decimal dayDifferenceZurichAmount = Model.SalesSummary.CurrentDate.ZurichAmount - Model.SalesSummary.PreviousDate.ZurichAmount;
+
+                                decimal yearPercentageZurichAmount = yearDifferenceZurichAmount / Model.SalesSummary.PreviousYearToDate.ZurichAmount;
+                                decimal monthPercentageZurichAmount = monthDifferenceZurichAmount / Model.SalesSummary.PreviousMonthToDate.ZurichAmount;
+                                //decimal weekPercentageZurichAmount = weekDifferenceZurichAmount / Model.SalesSummary.PreviousWeekToDate.ZurichAmount;
+                                decimal dayPercentageZurichAmount = 0;
+                                if (Model.SalesSummary.PreviousDate.ZurichAmount > 0)
+                                {
+                                    dayPercentageZurichAmount = dayDifferenceZurichAmount / Model.SalesSummary.PreviousDate.ZurichAmount;
+                                }
+
+                                decimal yearDifferenceGapAmount = Model.SalesSummary.CurrentYearToDate.GapAmount - Model.SalesSummary.PreviousYearToDate.GapAmount;
+                                decimal monthDifferenceGapAmount = Model.SalesSummary.CurrentMonthToDate.GapAmount - Model.SalesSummary.PreviousMonthToDate.GapAmount;
+                                //decimal weekDifferenceGapAmount = Model.SalesSummary.CurrentWeekToDate.GapAmount - Model.SalesSummary.PreviousWeekToDate.GapAmount;
+                                decimal dayDifferenceGapAmount = Model.SalesSummary.CurrentDate.GapAmount - Model.SalesSummary.PreviousDate.GapAmount;
+
+                                decimal yearPercentageGapAmount = yearDifferenceGapAmount / Model.SalesSummary.PreviousYearToDate.GapAmount;
+                                decimal monthPercentageGapAmount = monthDifferenceGapAmount / Model.SalesSummary.PreviousMonthToDate.GapAmount;
+                                //decimal weekPercentageGapAmount = weekDifferenceGapAmount / Model.SalesSummary.PreviousWeekToDate.GapAmount;
+
+                                decimal dayPercentageGapAmount = 0;
+                                if (Model.SalesSummary.PreviousDate.GapAmount > 0)
+                                {
+                                    dayPercentageGapAmount = dayDifferenceGapAmount / Model.SalesSummary.PreviousDate.GapAmount;
+                                }
+
+                                decimal yearDifferenceBPPAmount = Model.SalesSummary.CurrentYearToDate.BPPAmount - Model.SalesSummary.PreviousYearToDate.BPPAmount;
+                                decimal monthDifferenceBPPAmount = Model.SalesSummary.CurrentMonthToDate.BPPAmount - Model.SalesSummary.PreviousMonthToDate.BPPAmount;
+                                //decimal weekDifferenceBPPAmount = Model.SalesSummary.CurrentWeekToDate.BPPAmount - Model.SalesSummary.PreviousWeekToDate.BPPAmount;
+                                decimal dayDifferenceBPPAmount = Model.SalesSummary.CurrentDate.BPPAmount - Model.SalesSummary.PreviousDate.BPPAmount;
+
+                                decimal yearPercentageBPPAmount = yearDifferenceBPPAmount / Model.SalesSummary.PreviousYearToDate.BPPAmount;
+                                decimal monthPercentageBPPAmount = monthDifferenceBPPAmount / Model.SalesSummary.PreviousMonthToDate.BPPAmount;
+                                //decimal weekPercentageBPPAmount = weekDifferenceBPPAmount / Model.SalesSummary.PreviousWeekToDate.BPPAmount;
+                                decimal dayPercentageBPPAmount = 0;
+
+                                if (Model.SalesSummary.PreviousDate.BPPAmount > 0)
+                                {
+                                    dayPercentageBPPAmount = dayDifferenceBPPAmount / Model.SalesSummary.PreviousDate.BPPAmount;
+                                }
+
+                                decimal yearDifferenceOtherAmount = Model.SalesSummary.CurrentYearToDate.OtherAmount - Model.SalesSummary.PreviousYearToDate.OtherAmount;
+                                decimal monthDifferenceOtherAmount = Model.SalesSummary.CurrentMonthToDate.OtherAmount - Model.SalesSummary.PreviousMonthToDate.OtherAmount;
+                                //decimal weekDifferenceOtherAmount = Model.SalesSummary.CurrentWeekToDate.OtherAmount - Model.SalesSummary.PreviousWeekToDate.OtherAmount;
+                                decimal dayDifferenceOtherAmount = Model.SalesSummary.CurrentDate.OtherAmount - Model.SalesSummary.PreviousDate.OtherAmount;
+
+                                decimal yearPercentageOtherAmount = yearDifferenceOtherAmount / Model.SalesSummary.PreviousYearToDate.OtherAmount;
+                                decimal monthPercentageOtherAmount = monthDifferenceOtherAmount / Model.SalesSummary.PreviousMonthToDate.OtherAmount;
+                                //decimal weekPercentageOtherAmount = weekDifferenceOtherAmount / Model.SalesSummary.PreviousWeekToDate.OtherAmount;
+                                decimal dayPercentageOtherAmount = 0;
+
+                                if (Model.SalesSummary.PreviousDate.OtherAmount > 0)
+                                {
+                                    dayPercentageOtherAmount = dayDifferenceOtherAmount / Model.SalesSummary.PreviousDate.OtherAmount;
+                                }
+
+
+
+        <tr>
+        <td class="text-right divider-column"><strong>Front Gross Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceGrossAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageGrossAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceGrossAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageGrossAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.GrossAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceGrossAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageGrossAmount.ToString("P")</td>
+
+
+                            </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>Finance Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceFinanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageFinanceAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceFinanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageFinanceAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.FinanceAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceFinanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageFinanceAmount.ToString("P")</td>
+
+
+    </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>Service Contract Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceServiceContractAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageServiceContractAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceServiceContractAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageServiceContractAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.ServiceContractAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceServiceContractAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageServiceContractAmount.ToString("P")</td>
+
+
+    </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>Maintenance Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceMaintenanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageMaintenanceAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceMaintenanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageMaintenanceAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.MaintenanceAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceMaintenanceAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageMaintenanceAmount.ToString("P")</td>
+
+    </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>Zurich Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceZurichAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageZurichAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceZurichAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageZurichAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.ZurichAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceZurichAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageZurichAmount.ToString("P")</td>
+
+
+    </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>GAP Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceGapAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageGapAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceGapAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageGapAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.GapAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceGapAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageGapAmount.ToString("P")</td>
+
+
+    </tr>
+    <tr>
+        <td class="text-right divider-column"><strong>BPP Amount</strong></td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@dayDifferenceBPPAmount.ToString("C")</td>
+        <td class="text-center divider-column">@dayPercentageBPPAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousMonthToDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentMonthToDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@monthDifferenceBPPAmount.ToString("C")</td>
+        <td class="text-center divider-column">@monthPercentageBPPAmount.ToString("P")</td>
+
+        <td class="text-right">@Model.SalesSummary.PreviousYearToDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@Model.SalesSummary.CurrentYearToDate.BPPAmount.ToString("C")</td>
+        <td class="text-right">@yearDifferenceBPPAmount.ToString("C")</td>
+        <td class="text-center divider-column">@yearPercentageBPPAmount.ToString("P")</td>
+
+    </tr>*@

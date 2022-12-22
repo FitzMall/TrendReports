@@ -1,0 +1,306 @@
+﻿@model TrendReports.Models.ServiceDataTotals
+
+@{
+    Layout = null;
+
+    var locations = new List<string>();
+    var allDates = new List<DateTime>();
+
+    for (var dt = Model.StartDate; dt <= Model.EndDate; dt = dt.AddDays(1))
+    {
+        allDates.Add(dt);
+    }
+
+    if (Model != null)
+    {
+        locations = Model.ServiceData.OrderBy(x => x.Location).Select(x => x.Location).Distinct().ToList();
+
+    }
+
+    Random random = new Random();
+    int randomNumber = random.Next(0, 1000);
+
+    System.Globalization.NumberFormatInfo nfi = new System.Globalization.CultureInfo("en-US", false).NumberFormat;
+    nfi.CurrencyDecimalDigits = 2;
+    nfi.PercentDecimalDigits = 2;
+    nfi.CurrencySymbol = "$";
+
+    if (Model.DataPoint == "RepairOrderCount")
+    {
+        nfi.CurrencyDecimalDigits = 0;
+        nfi.PercentDecimalDigits = 2;
+        nfi.CurrencySymbol = "";
+    }
+}
+
+<style type="text/css">
+    .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+        padding: 4px;
+    }
+</style>
+
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-hover table-bordered" style="font-size:11px;">
+            <thead>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">Date</th>
+                    @foreach (var location in locations)
+                    {
+                        <th class="text-center">@location</th>
+                    }
+                    <th class="text-center" style="border-left: 3px double #dddddd;">Totals</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var closeDate in allDates)
+                    {
+                        decimal overallTotal = 0;
+                        <tr>
+                            <td>@closeDate.ToShortDateString()</td>
+                            @foreach (var location in locations)
+                            {
+                                var locationRows = Model.ServiceData.FindAll(x => x.Location == location && x.CloseDate == closeDate);
+
+                                decimal dateTotals = 0;
+                                foreach (var row in locationRows)
+                                {
+                                    switch (Model.DataPoint)
+                                    {
+                                        case "RepairOrderCount":
+                                            dateTotals += row.RepairOrderCount;
+                                                break;
+                                        case "CustomerAmount":
+                                            dateTotals += row.CustomerAmount;
+                                            break;
+                                        case "WarrantyAmount":
+                                            dateTotals += row.WarrantyAmount;
+                                            break;
+                                        case "CustomerLaborAmount":
+                                            dateTotals += row.CustomerLaborAmount;
+                                            break;
+                                        case "WarrantyLaborAmount":
+                                            dateTotals += row.WarrantyLaborAmount;
+                                            break;
+                                    }
+
+                                }
+                                overallTotal += dateTotals;
+
+                                <td class="text-right">@dateTotals.ToString("C",nfi)</td>
+                            }
+                            <td class="text-right" style="border-left: 3px double #dddddd;">@overallTotal.ToString("C",nfi)</td>
+                        </tr>
+                    }
+                }
+
+
+            </tbody>
+            <tfoot>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">Totals</th>
+                    @{ 
+                        decimal grandTotal = 0;
+                    }
+                    @foreach (var location in locations)
+                    {
+                        var locationRows = Model.ServiceData.FindAll(x => x.Location == location);
+
+                        decimal dateTotals = 0;
+                        foreach (var row in locationRows)
+                        {
+                            switch (Model.DataPoint)
+                            {
+                                case "RepairOrderCount":
+                                    dateTotals += row.RepairOrderCount;
+                                    break;
+                                case "CustomerAmount":
+                                    dateTotals += row.CustomerAmount;
+                                    break;
+                                case "WarrantyAmount":
+                                    dateTotals += row.WarrantyAmount;
+                                    break;
+                                case "CustomerLaborAmount":
+                                    dateTotals += row.CustomerLaborAmount;
+                                    break;
+                                case "WarrantyLaborAmount":
+                                    dateTotals += row.WarrantyLaborAmount;
+                                    break;
+                            }
+
+                        }
+                        grandTotal += dateTotals;
+
+                        <th class="text-right">@dateTotals.ToString("C",nfi)</th>
+                    }
+                    <th class="text-right" style="border-left: 3px double #dddddd;">@grandTotal.ToString("C",nfi)</th>
+                </tr>
+                <tr style="background-color:#d9edf7">
+                    <th class="text-center">Per Day</th>
+                    @{
+                        decimal avgTotal = 0;
+                        decimal perDay = 0;
+                    }
+                    @foreach (var location in locations)
+                    {
+                        var locationRows = Model.ServiceData.FindAll(x => x.Location == location);
+
+                        decimal dateTotals = 0;
+                        foreach (var row in locationRows)
+                        {
+
+                            switch (Model.DataPoint)
+                            {
+                                case "RepairOrderCount":
+                                    dateTotals += row.RepairOrderCount;
+                                    break;
+                                case "CustomerAmount":
+                                    dateTotals += row.CustomerAmount;
+                                    break;
+                                case "WarrantyAmount":
+                                    dateTotals += row.WarrantyAmount;
+                                    break;
+                                case "CustomerLaborAmount":
+                                    dateTotals += row.CustomerLaborAmount;
+                                    break;
+                                case "WarrantyLaborAmount":
+                                    dateTotals += row.WarrantyLaborAmount;
+                                    break;
+                            }
+
+                        }
+                        avgTotal += dateTotals;
+
+                        decimal avgDay = 0;
+
+                        if (allDates.Count > 0)
+                        {
+                            avgDay = dateTotals / allDates.Count;
+                        }
+                        <th class="text-right">@avgDay.ToString("C",nfi)</th>
+                    }
+                    @{ 
+                        if (allDates.Count > 0)
+                        {
+                            perDay = avgTotal / allDates.Count;
+                        } 
+                    }
+                    <th class="text-right" style="border-left: 3px double #dddddd;">@perDay.ToString("C",nfi)</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="chartContainer-@randomNumber" style="height: 370px; width: 100%;"></div>
+
+        <script>
+
+            var chart = new CanvasJS.Chart("chartContainer-@randomNumber", {
+	title: {
+		text: "@Model.DataPoint Sales"
+	},
+	axisX: {
+		valueFormatString: "MMM DD YYYY"
+	},
+	axisY2: {
+	    title: "Sales Revenue",
+	    includeZero: false,
+        		@if(Model.DataPoint == "RepairOrderCount")
+        		    {
+        		        @:prefix: "",
+        		        }
+        		else
+        		{
+        		    @:prefix: "$",
+        		    }
+		suffix: ""
+	},
+	toolTip: {
+		shared: true
+	},
+	legend: {
+		cursor: "pointer",
+		verticalAlign: "top",
+		horizontalAlign: "center",
+		dockInsidePlotArea: true,
+		itemclick: toogleDataSeries
+	},
+	data: [{
+		type:"line",
+		axisYType: "secondary",
+		name: "@Model.DataPoint",
+		showInLegend: true,
+	    //markerSize: 1,
+        		@if(Model.DataPoint == "RepairOrderCount")
+        		    {
+        		        @:yValueFormatString: "###",
+        		        }
+        		else
+        		{
+        		    @:yValueFormatString: "$#,###",
+        		    }
+		yValueFormatString: "$#,###",
+		dataPoints: [
+             @{
+                 foreach (var closeDate in allDates)
+                 {
+                     decimal overallTotal = 0;
+
+                     foreach (var location in locations)
+                     {
+                         var locationRows = Model.ServiceData.FindAll(x => x.Location == location && x.CloseDate == closeDate);
+
+                         decimal dateTotals = 0;
+                         foreach (var row in locationRows)
+                         {
+                             switch (Model.DataPoint)
+                             {
+                                 case "RepairOrderCount":
+                                     dateTotals += row.RepairOrderCount;
+                                     break;
+                                 case "CustomerAmount":
+                                     dateTotals += row.CustomerAmount;
+                                     break;
+                                 case "WarrantyAmount":
+                                     dateTotals += row.WarrantyAmount;
+                                     break;
+                                 case "CustomerLaborAmount":
+                                     dateTotals += row.CustomerLaborAmount;
+                                     break;
+                                 case "WarrantyLaborAmount":
+                                     dateTotals += row.WarrantyLaborAmount;
+                                     break;
+                             }
+
+                         }
+                         overallTotal += dateTotals;
+
+
+                     }
+                     var javascriptMonth = closeDate.Month - 1;
+                     @:{ x: new Date(@closeDate.Year, @javascriptMonth.ToString("00"), @closeDate.Day.ToString("00")), y: @overallTotal },
+                                 }
+                             }
+
+
+		]
+	}]
+});
+chart.render();
+
+function toogleDataSeries(e){
+	if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+		e.dataSeries.visible = false;
+	} else{
+		e.dataSeries.visible = true;
+	}
+	chart.render();
+}
+
+
+        </script>
+    </div>
+</div>

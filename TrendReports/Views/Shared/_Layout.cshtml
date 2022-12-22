@@ -3,10 +3,92 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>Trend Reports - Fitzgerald Auto Mall</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="~/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/css/trendreports.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/jquery")
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.css" />
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
+    <link rel="stylesheet" href="~/Scripts/Chosen/chosen.css">
+    <style>
+        .dropdown-submenu {
+            position: relative;
+        }
+
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: 100%;
+                margin-top: -6px;
+                margin-left: -1px;
+                -webkit-border-radius: 0 4px 4px 4px;
+                -moz-border-radius: 0 4px 4px 4px;
+                border-radius: 0 4px 4px 4px;
+            }
+
+            .dropdown-submenu:hover > .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-submenu > a:after {
+                display: block;
+                content: " ";
+                float: right;
+                width: 0;
+                height: 0;
+                border-color: transparent;
+                border-style: solid;
+                border-width: 5px 0 5px 5px;
+                border-left-color: #cccccc;
+                margin-top: 5px;
+                margin-right: -10px;
+            }
+
+            .dropdown-submenu:hover > a:after {
+                border-left-color: #ffffff;
+            }
+
+            .dropdown-submenu.pull-left {
+                float: none;
+            }
+
+                .dropdown-submenu.pull-left > .dropdown-menu {
+                    left: -100%;
+                    margin-left: 10px;
+                    -webkit-border-radius: 4px 0 4px 4px;
+                    -moz-border-radius: 4px 0 4px 4px;
+                    border-radius: 4px 0 4px 4px;
+                }
+
+            .container{
+                max-width:95%
+            }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.css" />
+
+    @RenderSection("CSS", required: false)
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jszip-2.5.0/dt-1.10.16/b-1.5.1/b-flash-1.5.1/b-html5-1.5.1/b-print-1.5.1/datatables.min.js"></script>
+
+
 </head>
+@{  
+    var applicationPath = Request.ApplicationPath;
+
+    if (applicationPath == "/")
+    {
+        applicationPath = "";
+    }
+}
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -16,13 +98,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@applicationPath/Index" class="navbar-brand"><i class="fa fa-home" aria-hidden="true"></i> Trend Analysis</a>
+                    </li>
+                </ul>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Sales", "Index", "Sales")</li>
+                    <li>@Html.ActionLink("Service", "Index", "Service")</li>
+                    <li>@Html.ActionLink("Parts", "Index", "Parts")</li>
                 </ul>
             </div>
         </div>
@@ -31,12 +117,73 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - Fitzgerald Auto Malls</p>
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
+
     @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript">
+        _anyNumberSort = function (a, b, high) {
+            var reg = /[+-]?((\d+(\.\d*)?)|\.\d+)([eE][+-]?[0-9]+)?/;
+
+            if (a.match(/[\()]/g)) {
+                if (a.match(/[\-]/g) !== true) {
+                    //It matched - strip out parentheses & any characters we dont want and append - at front
+                    a = '-' + a.replace(/[\$£€c\(\),]/g, '');
+                }
+            }
+            if (b.match(/[\()]/g)) {
+                if (b.match(/[\-]/g) !== true) {
+                    //It matched - strip out parentheses & any characters we dont want and append - at front
+                    b = '-' + b.replace(/[\$£€c\(\),]/g, '');
+                }
+            }
+
+            a = a.replace(/[\$£€\,]/g, '');
+            b = b.replace(/[\$£€\,]/g, '');
+
+            a = a.replace(',', '.').match(reg);
+            a = a !== null ? parseFloat(a[0]) : high;
+            b = b.replace(',', '.').match(reg);
+            b = b !== null ? parseFloat(b[0]) : high;
+            return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+        }
+
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "any-number-asc": function (a, b) {
+                return _anyNumberSort(a, b, Number.POSITIVE_INFINITY);
+            },
+            "any-number-desc": function (a, b) {
+                return _anyNumberSort(a, b, Number.NEGATIVE_INFINITY) * -1;
+            }
+        });
+
+        jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+            "date-us-pre": function (a) {
+                if (a == null || a == "") {
+                    return 0;
+                }
+                var usDatea = a.split('/');
+                return (usDatea[2] + usDatea[1] + usDatea[0]) * 1;
+            },
+
+            "date-us-asc": function (a, b) {
+                return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+            },
+
+            "date-us-desc": function (a, b) {
+                return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+            }
+        });
+    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jQuery-QueryBuilder/dist/js/query-builder.standalone.min.js"></script>
+
+    <script src="~/Scripts/Chosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="~/Scripts/Chosen/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Scripts/Chosen/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

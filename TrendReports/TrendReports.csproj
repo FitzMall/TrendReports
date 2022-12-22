@@ -44,6 +44,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DapperORM, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\DapperORM.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -120,25 +124,71 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Business\Enums.cs" />
+    <Compile Include="Business\Helpers.cs" />
+    <Compile Include="Business\SqlMapperUtil.cs" />
+    <Compile Include="Business\SqlQueries.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PartsController.cs" />
+    <Compile Include="Controllers\SalesController.cs" />
+    <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\PartsModel.cs" />
+    <Compile Include="Models\SalesModel.cs" />
+    <Compile Include="Models\ServiceModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="css\font-awesome.css" />
+    <Content Include="css\font-awesome.min.css" />
+    <Content Include="css\jquery.dataTables.min.css" />
+    <Content Include="css\trendreports.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\TrendReports.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\Chosen\chosen-sprite%402x.png" />
+    <Content Include="Scripts\Chosen\chosen-sprite.png" />
+    <Content Include="Scripts\Chosen\chosen.css" />
+    <Content Include="Scripts\Chosen\chosen.jquery.js" />
+    <Content Include="Scripts\Chosen\chosen.jquery.min.js" />
+    <Content Include="Scripts\Chosen\chosen.min.css" />
+    <Content Include="Scripts\Chosen\chosen.proto.js" />
+    <Content Include="Scripts\Chosen\chosen.proto.min.js" />
+    <Content Include="Scripts\Chosen\docsupport\chosen.png" />
+    <Content Include="Scripts\Chosen\docsupport\init.js" />
+    <Content Include="Scripts\Chosen\docsupport\init.proto.js" />
+    <Content Include="Scripts\Chosen\docsupport\oss-credit.png" />
+    <Content Include="Scripts\Chosen\docsupport\prism.css" />
+    <Content Include="Scripts\Chosen\docsupport\prism.js" />
+    <Content Include="Scripts\Chosen\docsupport\style.css" />
+    <Content Include="Scripts\external\jquery\jquery.js" />
+    <Content Include="Scripts\images\ui-icons_444444_256x240.png" />
+    <Content Include="Scripts\images\ui-icons_555555_256x240.png" />
+    <Content Include="Scripts\images\ui-icons_777620_256x240.png" />
+    <Content Include="Scripts\images\ui-icons_777777_256x240.png" />
+    <Content Include="Scripts\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Scripts\images\ui-icons_ffffff_256x240.png" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.css" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.css" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery-ui.structure.css" />
+    <Content Include="Scripts\jquery-ui.structure.min.css" />
+    <Content Include="Scripts\jquery-ui.theme.css" />
+    <Content Include="Scripts\jquery-ui.theme.min.css" />
+    <Content Include="Scripts\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -158,13 +208,18 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Parts\Index.cshtml" />
+    <Content Include="Views\Sales\Index.cshtml" />
+    <Content Include="Views\Service\Index.cshtml" />
+    <Content Include="Views\Service\ServiceData.cshtml" />
+    <Content Include="Views\Sales\SalesData.cshtml" />
+    <Content Include="Views\Sales\OldIndex.cshtml" />
+    <Content Include="Views\Service\OldIndex .cshtml" />
+    <Content Include="Views\Home\oldcode.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

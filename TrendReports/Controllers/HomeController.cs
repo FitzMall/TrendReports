@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using TrendReports.Models;
+using TrendReports.Business;
 using System.Web.Mvc;
 
 namespace TrendReports.Controllers
@@ -10,21 +12,31 @@ namespace TrendReports.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            var summaryModel = new SummaryModel();
+
+            summaryModel.MonthId = DateTime.Now.Month;
+            summaryModel.YearId = DateTime.Now.Year;
+            summaryModel.VehicleCondition = "ALL";
+
+            summaryModel.ServiceSummary = SqlQueries.GetServiceSummary(summaryModel.MonthId, summaryModel.YearId);
+            summaryModel.SalesSummary = SqlQueries.GetSalesSummary(summaryModel.MonthId, summaryModel.YearId);
+
+            return View(summaryModel);
         }
 
-        public ActionResult About()
+        [HttpPost]
+        public ActionResult Index(SummaryModel summaryModel)
         {
-            ViewBag.Message = "Your application description page.";
+            //summaryModel.MonthId = DateTime.Now.Month;
+            //summaryModel.YearId = DateTime.Now.Year;
+            //summaryModel.VehicleCondition = "ALL";
 
-            return View();
+            summaryModel.ServiceSummary = SqlQueries.GetServiceSummary(summaryModel.MonthId, summaryModel.YearId);
+            summaryModel.SalesSummary = SqlQueries.GetSalesSummary(summaryModel.MonthId, summaryModel.YearId,summaryModel.VehicleCondition);
+
+            
+            return View(summaryModel);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
     }
 }
