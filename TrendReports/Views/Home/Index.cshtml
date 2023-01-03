@@ -183,8 +183,11 @@
                             decimal dayDifferenceRepairOrderCount = Model.ServiceSummary.CurrentDate.RepairOrderCount - Model.ServiceSummary.PreviousDate.RepairOrderCount;
 
 
-                            decimal yearPercentageRepairOrderCount = yearDifferenceRepairOrderCount / Model.ServiceSummary.PreviousYearToDate.RepairOrderCount;
-
+                            decimal yearPercentageRepairOrderCount = 0;
+                            if (Model.ServiceSummary.PreviousYearToDate.RepairOrderCount > 0)
+                            {
+                                yearPercentageRepairOrderCount=   yearDifferenceRepairOrderCount / Model.ServiceSummary.PreviousYearToDate.RepairOrderCount;
+                            }
                             decimal monthPercentageRepairOrderCount = 0;
                             if (Model.ServiceSummary.PreviousMonthToDate.RepairOrderCount > 0)
                             {
@@ -237,7 +240,11 @@
                             //weekDifferenceCustomerLaborAmount = Model.ServiceSummary.CurrentWeekToDate.CustomerLaborAmount - Model.ServiceSummary.PreviousWeekToDate.CustomerLaborAmount;
                             dayDifferenceCustomerLaborAmount = Model.ServiceSummary.CurrentDate.CustomerLaborAmount - Model.ServiceSummary.PreviousDate.CustomerLaborAmount;
 
-                            yearPercentageCustomerLaborAmount = yearDifferenceCustomerLaborAmount / Model.ServiceSummary.PreviousYearToDate.CustomerLaborAmount;
+                            if (Model.ServiceSummary.PreviousYearToDate.CustomerLaborAmount > 0)
+                            {
+                                yearPercentageCustomerLaborAmount = yearDifferenceCustomerLaborAmount / Model.ServiceSummary.PreviousYearToDate.CustomerLaborAmount;
+                            }
+
                             if (Model.ServiceSummary.PreviousMonthToDate.CustomerLaborAmount > 0)
                             {
                                 monthPercentageCustomerLaborAmount = monthDifferenceCustomerLaborAmount / Model.ServiceSummary.PreviousMonthToDate.CustomerLaborAmount;
@@ -252,7 +259,10 @@
                             monthDifferenceWarrantyLaborAmount = Model.ServiceSummary.CurrentMonthToDate.WarrantyLaborAmount - Model.ServiceSummary.PreviousMonthToDate.WarrantyLaborAmount;
                             dayDifferenceWarrantyLaborAmount = Model.ServiceSummary.CurrentDate.WarrantyLaborAmount - Model.ServiceSummary.PreviousDate.WarrantyLaborAmount;
 
-                            yearPercentageWarrantyLaborAmount = yearDifferenceWarrantyLaborAmount / Model.ServiceSummary.PreviousYearToDate.WarrantyLaborAmount;
+                            if (Model.ServiceSummary.PreviousYearToDate.WarrantyLaborAmount > 0)
+                            {
+                                yearPercentageWarrantyLaborAmount = yearDifferenceWarrantyLaborAmount / Model.ServiceSummary.PreviousYearToDate.WarrantyLaborAmount;
+                            }
                             if (Model.ServiceSummary.PreviousMonthToDate.WarrantyLaborAmount > 0)
                             {
                                 monthPercentageWarrantyLaborAmount = monthDifferenceWarrantyLaborAmount / Model.ServiceSummary.PreviousMonthToDate.WarrantyLaborAmount;
